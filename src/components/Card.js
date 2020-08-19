@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
     height: '340px',
     margin: '50px',
     fontSize: '1.1rem',
-    overflow: 'visible',
     boxShadow: 'none',
+    overflow: 'visible',
     zIndex: (zIndex) => zIndex,
     transition: 'transform 0.5s',
   },
@@ -74,7 +74,11 @@ const Card = ({ movie, zIndex }) => {
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
           alt={movie.title}
         ></img>
-        <div className={classes.name}>{movie.title}</div>
+        <div className={classes.name}>
+          {movie.title.length > 15
+            ? movie.title.slice(0, 15) + '...'
+            : movie.title}
+        </div>
       </div>
       <div
         className={classes.details}

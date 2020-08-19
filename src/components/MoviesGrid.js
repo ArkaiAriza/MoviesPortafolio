@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Card from './Card';
 
-import axios from '../apis/axios';
-import { TMDB_KEY } from '../keys';
+import MoviesContext from '../contexts/MoviesContext';
 
 const MoviesGrid = () => {
-  const [movie, setMovie] = useState(null);
+  const [list, setlist] = useState(null);
+  const value = useContext(MoviesContext);
 
-  useEffect(() => {
-    const request = async () => {
-      const response = await axios.get(`/3/movie/808?api_key=${TMDB_KEY}`);
-      setMovie(response.data);
-    };
+  const renderCards = (movies) => {
+    const i = movies.length;
 
-    request();
-  }, []);
-
-  const renderCards = () => {
-    const z = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-    const i = z.length;
-
-    return z.map((item, index) => {
-      return <Card key={index} movie={movie} zIndex={i - index}></Card>;
+    return movies.map((item, index) => {
+      return <Card key={index} movie={item} zIndex={i - index}></Card>;
     });
   };
+
+  console.log(value);
 
   return (
     <div
@@ -34,7 +26,7 @@ const MoviesGrid = () => {
         justifyContent: 'center',
       }}
     >
-      {renderCards()}
+      {value.list !== null ? renderCards(value.list) : null}
     </div>
   );
 };

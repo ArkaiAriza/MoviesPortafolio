@@ -1,56 +1,95 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from '../apis/axios';
 
 import Modal from './Modal';
 
-import {
-  Card as MaterialCard,
-  CardContent,
-  CardMedia,
-} from '@material-ui/core';
+import { Card as MaterialCard } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { findByLabelText } from '@testing-library/react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: 'auto',
-    background: 'none',
-    display: 'flex',
-    flexDirection: 'column',
+    position: 'relative',
     maxWidth: '200px',
-    boxShadow: 'none',
+    height: '340px',
+    margin: '50px',
     fontSize: '1.1rem',
+    overflow: 'visible',
+    boxShadow: 'none',
+    zIndex: (zIndex) => zIndex,
+    transition: 'transform 0.5s',
   },
   media: {
-    maxWidth: '100%',
+    maxWidth: '200px',
   },
-  content: { padding: '0.5rem !important', color: '#ccc' },
+  name: {
+    flex: 1,
+    padding: '0.5rem !important',
+    color: '#ccc',
+    backgroundColor: '#222',
+  },
+  details: {
+    position: 'absolute',
+    zIndex: -1,
+    top: 0,
+    bottom: 0,
+    right: 0,
+    width: '100%',
+    backgroundColor: 'yellow',
+    transition: 'right 0.2s',
+  },
+  left: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
 }));
 
-const Card = ({ movie }) => {
+const Card = ({ movie, zIndex }) => {
   //axios.get(`/3/movie/popular?api_key=${TMDB_KEY}`);
 
-  const classes = useStyles();
-  console.log(movie);
+  const [hover, setHover] = useState(false);
 
-  if (!movie) return <div>Card;</div>;
+  const classes = useStyles(zIndex);
+
+  if (!movie) return <div>Card</div>;
 
   return (
-    <div>
-      <h4>Card</h4>
-      <MaterialCard className={classes.root}>
+    <MaterialCard
+      className={classes.root}
+      style={
+        hover
+          ? {
+              transform: 'scale(1.1,1.1)',
+            }
+          : null
+      }
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div className={classes.left}>
         <img
           className={classes.media}
           src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
           alt={movie.title}
         ></img>
-        <CardContent className={classes.content}>
-          <div>{movie.title}</div>
-        </CardContent>
-      </MaterialCard>
-      <Modal />
-    </div>
+        <div className={classes.name}>{movie.title}</div>
+      </div>
+      <div
+        className={classes.details}
+        style={
+          hover
+            ? {
+                right: '-200px',
+                transition: 'right 0.5s',
+              }
+            : null
+        }
+      >
+        Hello
+      </div>
+    </MaterialCard>
   );
 };
 

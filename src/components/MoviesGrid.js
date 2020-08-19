@@ -16,10 +16,25 @@ const MoviesGrid = () => {
     request();
   }, []);
 
+  const renderCards = () => {
+    const z = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    const i = z.length;
+
+    return z.map((item, index) => {
+      return <Card key={index} movie={movie} zIndex={i - index}></Card>;
+    });
+  };
+
   return (
-    <div>
-      <h1>MoviesGrid</h1>
-      <Card movie={movie} />
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+      }}
+    >
+      {renderCards()}
     </div>
   );
 };

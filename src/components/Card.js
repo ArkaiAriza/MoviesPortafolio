@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     width: '100%',
     backgroundColor: 'yellow',
-    transition: 'right 0.2s',
+    transition: 'right 0.2s, width 0.2s',
   },
   left: {
     height: '100%',
@@ -85,8 +85,9 @@ const Card = ({ movie, zIndex }) => {
         style={
           hover
             ? {
-                right: '-200px',
-                transition: 'right 0.5s',
+                right: '-300px',
+                width: '300px',
+                transition: 'right 0.5s, width 0.5s',
               }
             : null
         }

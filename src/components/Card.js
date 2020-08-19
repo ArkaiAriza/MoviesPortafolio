@@ -85,8 +85,8 @@ const Card = ({ movie, zIndex }) => {
         style={
           hover
             ? {
-                right: '-300px',
-                width: '300px',
+                right: '-200%',
+                width: '200%',
                 transition: 'right 0.5s, width 0.5s',
               }
             : null

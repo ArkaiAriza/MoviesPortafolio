@@ -30,12 +30,21 @@ export const MoviesProvider = ({ children }) => {
     setList(response.data.results);
   };
 
+  const getGenreList = async (genre) => {
+    const response = await axios.get(
+      `/3/discover/movie?api_key=${TMDB_KEY}&sort_by=popularity.desc&with_genres=${genre}`
+    );
+    setList(response.data.results);
+  };
+
   useEffect(() => {
     getList('now_playing');
   }, []);
 
   return (
-    <MoviesContext.Provider value={{ list, changeList, getList, searchMovie }}>
+    <MoviesContext.Provider
+      value={{ list, changeList, getList, searchMovie, getGenreList }}
+    >
       {children}
     </MoviesContext.Provider>
   );

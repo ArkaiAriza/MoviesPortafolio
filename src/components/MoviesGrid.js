@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import Card from './Card';
 
 import MoviesContext from '../contexts/MoviesContext';
 
 const MoviesGrid = () => {
-  const [list, setlist] = useState(null);
   const value = useContext(MoviesContext);
 
   const renderCards = (movies) => {
@@ -14,8 +13,6 @@ const MoviesGrid = () => {
       return <Card key={index} movie={item} zIndex={i - index}></Card>;
     });
   };
-
-  console.log(value);
 
   return (
     <div

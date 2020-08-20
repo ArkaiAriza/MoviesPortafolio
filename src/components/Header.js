@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -12,6 +12,10 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon, MoreVert as MoreIcon } from '@material-ui/icons';
 
+import axios from '../apis/axios';
+import { TMDB_KEY } from '../keys';
+
+import SubMenu from './SubMenu';
 import MoviesContext from '../contexts/MoviesContext';
 
 const useStyles = makeStyles((theme) => ({
@@ -86,10 +90,10 @@ const Header = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const [selectedList, setSelectedList] = React.useState(null);
+  const [genresList, setGenresList] = React.useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { getList, searchMovie } = useContext(MoviesContext);
+  const { getList, searchMovie, getGenreList } = useContext(MoviesContext);
 
   const handleGenreMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -99,7 +103,9 @@ const Header = () => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = (id) => {
+    if (id !== -1) getGenreList(id);
+
     setAnchorEl(null);
     handleMobileMenuClose();
   };
@@ -113,6 +119,17 @@ const Header = () => {
     setSearchTerm(term);
   };
 
+  useEffect(() => {
+    const request = async () => {
+      const response = await axios.get(
+        `/3/genre/movie/list?api_key=${TMDB_KEY}`
+      );
+      setGenresList(response.data.genres);
+    };
+
+    request();
+  }, []);
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -122,14 +139,14 @@ const Header = () => {
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
-      onClose={handleMenuClose}
+      onClose={(id) => handleMenuClose(-1)}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <SubMenu options={genresList} onOptionClick={handleMenuClose} />
     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
+
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}

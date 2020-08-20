@@ -1,6 +1,8 @@
 import React from 'react';
-import LandingPage from './LandingPage';
+
+import MoviesGrid from './MoviesGrid';
 import Header from './Header';
+
 import { MoviesProvider } from '../contexts/MoviesContext';
 
 const App = () => {
@@ -8,7 +10,7 @@ const App = () => {
     <div>
       <MoviesProvider>
         <Header />
-        <LandingPage />
+        <MoviesGrid />
       </MoviesProvider>
     </div>
   );

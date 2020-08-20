@@ -16,12 +16,16 @@ const useStyles = makeStyles((theme, props) => ({
     backgroundSize: 'cover', */
   },
   paper: {
+    '&::-webkit-scrollbar ': {
+      display: 'none',
+    },
     display: 'flex',
     position: 'relative',
     flexDirection: 'column',
     backgroundColor: '#222',
     boxShadow: theme.shadows[5],
     width: '80vw',
+    maxWidth: '800px',
     height: '800px',
     overflowX: 'hidden',
     overflowY: 'scroll',
@@ -47,7 +51,8 @@ const useStyles = makeStyles((theme, props) => ({
   content: {
     flex: 1,
     background: '#000',
-    height: '500px',
+    minHeight: '1000px',
+    padding: '1rem',
   },
 }));
 
@@ -100,8 +105,9 @@ export default function Modal({ open, handleClose, movie }) {
       BackdropProps={{
         timeout: 500,
       }}
+      disableScrollLock
     >
-      <Fade in={open}>
+      <Fade in={open} style={{ outline: 'none' }}>
         <div className={classes.paper}>
           <div className={classes.container}>
             <img
@@ -111,7 +117,9 @@ export default function Modal({ open, handleClose, movie }) {
             />
             <div className={classes.gradient} />
           </div>
-          <div className={classes.content}>MODAL</div>
+          <div className={classes.content}>
+            <h1>{movie.title}</h1>
+          </div>
         </div>
       </Fade>
     </UIModal>

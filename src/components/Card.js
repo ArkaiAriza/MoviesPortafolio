@@ -138,7 +138,7 @@ const Card = ({ movie }) => {
               {movie.title}
             </Typography>
             <Typography variant="body2" paragraph gutterBottom>
-              {trimText(movie.overview, 180)}
+              {trimText(movie.overview, 100)}
             </Typography>
             <Grid item xs={1}>
               <Grade />

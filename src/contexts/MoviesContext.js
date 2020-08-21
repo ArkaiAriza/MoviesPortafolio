@@ -16,7 +16,7 @@ export const MoviesProvider = ({ children }) => {
   const [currentListType, setCurrentListType] = useState('now_playing');
   const [currentListGenre, setCurrentListGenre] = useState(28);
   const [page, setPage] = useState(1);
-  const [lastSelected, setLastSelected] = useState('init'); //init, type, genre
+  const [lastSelected, setLastSelected] = useState('init'); //init, type, genre, search
 
   const changeList = (list) => {
     setList(list);
@@ -48,13 +48,14 @@ export const MoviesProvider = ({ children }) => {
 
   const searchMovie = async (term) => {
     if (term.length === 0) {
-      getList('now_playing');
+      getList('now_playing', 1);
       return;
     }
     const response = await axios.get(
       `/3/search/movie?api_key=${TMDB_KEY}&query=${term}`
     );
     setList(response.data.results);
+    setLastSelected('search');
   };
 
   const getGenreList = async (genre, selectedPage) => {

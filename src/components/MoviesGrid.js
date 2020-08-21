@@ -64,14 +64,16 @@ const MoviesGrid = () => {
         {list !== null ? renderCards(list) : null}
       </div>
       <div className={classes.root}>
-        <Pagination
-          count={10}
-          onChange={handlePage}
-          page={page}
-          color="primary"
-          showFirstButton
-          showLastButton
-        />
+        {lastSelected !== 'search' ? (
+          <Pagination
+            count={10}
+            onChange={handlePage}
+            page={page}
+            color="primary"
+            showFirstButton
+            showLastButton
+          />
+        ) : null}
         {/*TODO small pagination <Pagination count={10} color="primary" size="small" siblingCount={0} /> */}
       </div>
     </>

@@ -2,8 +2,8 @@ import React, { useState, useRef } from 'react';
 
 import Modal from './Modal';
 
-import { Card as MaterialCard } from '@material-ui/core';
-
+import { Card as MaterialCard, Typography, Grid } from '@material-ui/core';
+import { Grade } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -77,6 +77,10 @@ const Card = ({ movie }) => {
     setOpen(false);
   };
 
+  const trimText = (text, num) => {
+    return text.length > num ? text.slice(0, num) + '...' : text;
+  };
+
   const classes = useStyles();
 
   if (!movie) return <div>Card</div>;
@@ -94,8 +98,6 @@ const Card = ({ movie }) => {
             : null
         }
         onClick={handleOpen}
-        /* onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)} */
       >
         <div
           className={classes.left}
@@ -111,11 +113,7 @@ const Card = ({ movie }) => {
                 'https://www.theprintworks.com/wp-content/themes/psBella/assets/img/film-poster-placeholder.png')
             }
           ></img>
-          <div className={classes.name}>
-            {movie.title.length > 15
-              ? movie.title.slice(0, 15) + '...'
-              : movie.title}
-          </div>
+          <div className={classes.name}>{trimText(movie.title, 15)}</div>
         </div>
         <div
           className={classes.details}
@@ -135,10 +133,29 @@ const Card = ({ movie }) => {
               : null
           }
         >
-          Hello
+          <Grid container>
+            <Typography variant="h6" component="h2" gutterBottom>
+              {movie.title}
+            </Typography>
+            <Typography variant="body2" paragraph gutterBottom>
+              {trimText(movie.overview, 180)}
+            </Typography>
+            <Grid item xs={1}>
+              <Grade />
+            </Grid>
+            <Grid item xs={2}>
+              <Typography variant="subtitle1" paragraph gutterBottom>
+                {movie.vote_average}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" component="h2" gutterBottom>
+                {movie.release_date}
+              </Typography>
+            </Grid>
+          </Grid>
         </div>
       </MaterialCard>
-
       <Modal open={open} handleClose={handleClose} movie={movie} />
     </>
   );

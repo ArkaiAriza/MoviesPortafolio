@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Modal as UIModal } from '@material-ui/core/';
+import { Modal as UIModal, Typography, Grid, Link } from '@material-ui/core/';
 import Backdrop from '@material-ui/core/Backdrop';
 import { useSpring, animated } from 'react-spring/web.cjs';
+import { Grade } from '@material-ui/icons';
 
 import axios from '../apis/axios';
 import { TMDB_KEY } from '../keys';
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flex: 1,
     background: '#000',
-    minHeight: '1000px',
+    minHeight: 'auto',
     padding: '1rem',
   },
 }));
@@ -115,23 +116,30 @@ Fade.propTypes = {
 export default function Modal({ open, handleClose, movie }) {
   const classes = useStyles(movie);
   const [movieVideo, setMovieVideo] = useState(null);
+  const [movieDetails, setMovieDetails] = useState(null);
+
   const movieString = movieVideo
     ? `https://www.youtube.com/embed/${movieVideo}`
     : 'https://www.youtube.com/embed/1AasdTsg';
-
-  //if (movie) console.log(movie);
 
   useEffect(() => {
     const getMovieVideo = async () => {
       const response = await axios.get(
         `https://api.themoviedb.org/3/movie/${movie.id}?api_key=${TMDB_KEY}&append_to_response=videos`
       );
+      setMovieDetails(response.data);
       if (response.data.videos.results[0]) {
         setMovieVideo(response.data.videos.results[0].key);
       }
     };
     getMovieVideo();
-  }, []);
+  }, [movie.id]);
+
+  const genreRender = (movieDetail) => {
+    return movieDetail.genres.map((genre) => {
+      return ' ' + genre.name;
+    });
+  };
 
   return (
     <UIModal
@@ -150,14 +158,19 @@ export default function Modal({ open, handleClose, movie }) {
         <div className={classes.paper}>
           <div className={classes.container}>
             <div className={classes.video}>
-              <iframe
-                width="100%"
-                height="100%"
-                src={movieString}
-                frameBorder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              {movieVideo && movieDetails ? (
+                <iframe
+                  title={movieDetails.title}
+                  width="100%"
+                  height="100%"
+                  src={movieString}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                'Loading...'
+              )}
             </div>
             <img
               src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
@@ -167,7 +180,96 @@ export default function Modal({ open, handleClose, movie }) {
             <div className={classes.gradient} />
           </div>
           <div className={classes.content}>
-            <h1>{movie.title}</h1>
+            {movieDetails ? (
+              <Grid container spacing={1} style={{ textAlign: 'center' }}>
+                <Grid item xs={6}>
+                  <Typography variant="h5" component="h2" gutterBottom>
+                    {movieDetails.title}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    variant="subtitle1"
+                    paragraph
+                    gutterBottom
+                    style={{ display: 'inline-flex' }}
+                  >
+                    <Grade />
+                    {movieDetails.vote_average}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                    {movieDetails.release_date}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                    {'Runtime: ' + movieDetails.runtime + 'm'}
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="body1"
+                    component="h2"
+                    gutterBottom
+                    style={{ textAlign: 'justify' }}
+                  >
+                    {movieDetails.overview}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body1" component="h2" gutterBottom>
+                    Genre: {genreRender(movieDetails)}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                    {'Original Title: ' + movieDetails.original_title}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                    {movieDetails.homepage ? (
+                      <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={movieDetails.homepage}
+                      >
+                        {movieDetails.homepage}
+                      </Link>
+                    ) : (
+                      <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={`https://www.imdb.com/title/${movieDetails.imdb_id}/?ref_=nv_sr_srsg_0`}
+                      >
+                        IMDB Information!
+                      </Link>
+                    )}
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                    {'Status: ' + movieDetails.status}
+                  </Typography>
+                </Grid>
+                {movieDetails.tagline !== '' ? (
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h6"
+                      component="h2"
+                      gutterBottom
+                      style={{ textAlign: 'center' }}
+                    >
+                      {movieDetails.tagline}
+                    </Typography>
+                  </Grid>
+                ) : null}
+              </Grid>
+            ) : (
+              'Loading...'
+            )}
           </div>
         </div>
       </Fade>

@@ -43,7 +43,13 @@ export const MoviesProvider = ({ children }) => {
 
   return (
     <MoviesContext.Provider
-      value={{ list, changeList, getList, searchMovie, getGenreList }}
+      value={{
+        list,
+        changeList,
+        getList,
+        searchMovie,
+        getGenreList,
+      }}
     >
       {children}
     </MoviesContext.Provider>

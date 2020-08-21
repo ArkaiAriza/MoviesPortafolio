@@ -7,10 +7,8 @@ const MoviesGrid = () => {
   const value = useContext(MoviesContext);
 
   const renderCards = (movies) => {
-    const i = movies.length;
-
     return movies.map((item, index) => {
-      return <Card key={index} movie={item} zIndex={i - index}></Card>;
+      return <Card key={index} movie={item}></Card>;
     });
   };
 

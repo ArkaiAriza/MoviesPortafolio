@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 import Modal from './Modal';
 
@@ -15,9 +15,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.1rem',
     boxShadow: 'none',
     overflow: 'visible',
-    zIndex: (zIndex) => zIndex,
-    transition: 'transform 0.5s',
+    transition: 'transform 0.2s, z-index 0s ease 0.2s',
     backgroundColor: '#444',
+    zIndex: 0,
+    '&:hover': {
+      zIndex: 1,
+      transition: 'transform 0.2s ease 0.2s, z-index 0s',
+    },
   },
   media: {
     flex: 1,
@@ -40,21 +44,30 @@ const useStyles = makeStyles((theme) => ({
 
     backgroundColor: '#444',
     color: '#ccc',
-    transition: 'right 0.2s, width 0.2s',
+    transition: 'right 0.2s, width 0.2s, z-index 0.2s',
   },
   left: {
+    position: 'relative',
     height: '100%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    transition: 'z-index 0s ease 0.2s',
+    zIndex: 0,
+    '&:hover': {
+      zIndex: 2,
+      transition: 'z-index 0s',
+    },
   },
 }));
 
-const Card = ({ movie, zIndex }) => {
+const Card = ({ movie }) => {
   //axios.get(`/3/movie/popular?api_key=${TMDB_KEY}`);
 
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const hoverRef = useRef();
 
   const handleOpen = () => {
     setOpen(true);
@@ -64,7 +77,7 @@ const Card = ({ movie, zIndex }) => {
     setOpen(false);
   };
 
-  const classes = useStyles(zIndex);
+  const classes = useStyles();
 
   if (!movie) return <div>Card</div>;
 
@@ -72,6 +85,7 @@ const Card = ({ movie, zIndex }) => {
     <>
       <MaterialCard
         className={classes.root}
+        ref={hoverRef}
         style={
           hover
             ? {
@@ -80,10 +94,14 @@ const Card = ({ movie, zIndex }) => {
             : null
         }
         onClick={handleOpen}
-        onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
+        /* onMouseOver={() => setHover(true)}
+        onMouseOut={() => setHover(false)} */
       >
-        <div className={classes.left}>
+        <div
+          className={classes.left}
+          onMouseOver={() => setHover(true)}
+          onMouseOut={() => setHover(false)}
+        >
           <img
             className={classes.media}
             src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
@@ -104,9 +122,15 @@ const Card = ({ movie, zIndex }) => {
           style={
             hover
               ? {
-                  right: '-200%',
+                  right:
+                    hoverRef.current.getBoundingClientRect().x + 600 <=
+                    window.innerWidth
+                      ? '-200%'
+                      : '100%',
                   width: '200%',
-                  transition: 'right 0.5s, width 0.5s',
+                  transition:
+                    'right 0.2s ease 0.2s, width 0.2s ease 0.2s, z-index 0s',
+                  zIndex: 1,
                 }
               : null
           }

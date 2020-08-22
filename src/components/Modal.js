@@ -15,9 +15,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: '5rem 0',
     overflowY: 'scroll',
-    /* backgroundImage: (props) =>
-      `url(https://image.tmdb.org/t/p/original${props.backdrop_path})`,
-    backgroundSize: 'cover', */
   },
   paper: {
     '&::-webkit-scrollbar ': {
@@ -26,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     position: 'relative',
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: theme.palette.primary.dark,
     boxShadow: theme.shadows[5],
     width: '90vw',
     maxWidth: '100%',
@@ -44,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
     placeItems: 'center',
     boxSizing: 'content-box',
     marginBottom: '10%',
-    backgroundColor: 'black',
+    backgroundColor: theme.palette.primary.dark,
   },
   image: {
     zIndex: 0,
-    backgroundColor: '#222',
+    backgroundColor: theme.palette.primary.dark,
     width: '100%',
   },
   gradient: {
@@ -56,9 +53,10 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     width: '100%',
     height: '100%',
-    background:
-      'linear-gradient(to bottom, rgba(0,0,0,0) 0%, ' +
-      'rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,1) 90%)',
+    background: `linear-gradient(to bottom, ${theme.palette.primary.dark}00 0%, 
+                ${theme.palette.primary.dark}50 30%,
+                ${theme.palette.primary.dark}A0 50%,
+                ${theme.palette.primary.dark}FF 90%)`,
   },
   video: {
     top: '50%',
@@ -73,9 +71,24 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flex: 1,
-    background: '#000',
+    background: theme.palette.primary.dark,
     minHeight: 'auto',
     padding: '1rem',
+  },
+  divider: {
+    height: '1px',
+    backgroundColor: theme.palette.primary.light,
+    width: '60%',
+    border: 'none',
+  },
+  gridRow: {
+    display: 'inline-flex',
+    padding: '1rem 20%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  link: {
+    color: theme.palette.secondary.main,
   },
 }));
 
@@ -143,8 +156,8 @@ export default function Modal({ open, handleClose, movie }) {
 
   return (
     <UIModal
-      aria-labelledby="spring-modal-title"
-      aria-describedby="spring-modal-description"
+      aria-labelledby='spring-modal-title'
+      aria-describedby='spring-modal-description'
       className={classes.modal}
       open={open}
       onClose={handleClose}
@@ -154,18 +167,18 @@ export default function Modal({ open, handleClose, movie }) {
         timeout: 500,
       }}
     >
-      <Fade in={open} style={{ outline: 'none' }}>
+      <Fade in={open} style={{ outline: 'none', height: 'fit-content' }}>
         <div className={classes.paper}>
           <div className={classes.container}>
             <div className={classes.video}>
               {movieVideo && movieDetails ? (
                 <iframe
                   title={movieDetails.title}
-                  width="100%"
-                  height="100%"
+                  width='100%'
+                  height='100%'
                   src={movieString}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  frameBorder='0'
+                  allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
                   allowFullScreen
                 ></iframe>
               ) : (
@@ -174,91 +187,109 @@ export default function Modal({ open, handleClose, movie }) {
             </div>
             <img
               src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-              alt="a"
+              alt='a'
               className={classes.image}
             />
             <div className={classes.gradient} />
           </div>
           <div className={classes.content}>
             {movieDetails ? (
-              <Grid container spacing={1} style={{ textAlign: 'center' }}>
-                <Grid item xs={6}>
-                  <Typography variant="h5" component="h2" gutterBottom>
+              <Grid container>
+                <Grid item xs={12} className={classes.gridRow}>
+                  <Typography variant='h4' component='h2'>
                     {movieDetails.title}
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
                   <Typography
-                    variant="subtitle1"
+                    variant='h6'
                     paragraph
-                    gutterBottom
-                    style={{ display: 'inline-flex' }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      margin: 0,
+                    }}
                   >
-                    <Grade />
+                    <Grade style={{ marginRight: '5px' }} />
                     {movieDetails.vote_average}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2" component="h2" gutterBottom>
+
+                <Grid item xs={12} className={classes.gridRow}>
+                  <Typography variant='subtitle2' component='h2' gutterBottom>
                     {movieDetails.release_date}
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                  <Typography variant='subtitle2' component='h2' gutterBottom>
                     {'Runtime: ' + movieDetails.runtime + 'm'}
                   </Typography>
                 </Grid>
+
                 <Grid item xs={12}>
+                  <hr className={classes.divider} />
                   <Typography
-                    variant="body1"
-                    component="h2"
+                    variant='body1'
+                    component='h2'
                     gutterBottom
-                    style={{ textAlign: 'justify' }}
+                    style={{ textAlign: 'justify', padding: '1rem 15%' }}
                   >
                     {movieDetails.overview}
                   </Typography>
+                  <hr className={classes.divider} />
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="body1" component="h2" gutterBottom>
-                    Genre: {genreRender(movieDetails)}
+
+                <Grid item xs={12} className={classes.gridRow}>
+                  <Typography variant='body1' component='h2' gutterBottom>
+                    {genreRender(movieDetails)}
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                  <Typography
+                    variant='subtitle2'
+                    component='h2'
+                    gutterBottom
+                    style={{ textAlign: 'right' }}
+                  >
                     {'Original Title: ' + movieDetails.original_title}
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2" component="h2" gutterBottom>
+
+                <Grid item xs={12} className={classes.gridRow}>
+                  <Typography
+                    variant='subtitle2'
+                    component='h2'
+                    gutterBottom
+                    style={{
+                      overflow: 'hidden',
+                      marginRight: '1rem',
+                      wordBreak: 'break-word',
+                    }}
+                  >
                     {movieDetails.homepage ? (
                       <Link
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        className={classes.link}
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={movieDetails.homepage}
                       >
                         {movieDetails.homepage}
                       </Link>
                     ) : (
                       <Link
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        className={classes.link}
+                        target='_blank'
+                        rel='noopener noreferrer'
                         href={`https://www.imdb.com/title/${movieDetails.imdb_id}/?ref_=nv_sr_srsg_0`}
                       >
                         IMDB Information!
                       </Link>
                     )}
                   </Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography variant="subtitle2" component="h2" gutterBottom>
+                  <Typography variant='subtitle2' component='h2' gutterBottom>
                     {'Status: ' + movieDetails.status}
                   </Typography>
                 </Grid>
+
                 {movieDetails.tagline !== '' ? (
                   <Grid item xs={12}>
                     <Typography
-                      variant="h6"
-                      component="h2"
+                      variant='h5'
+                      component='h2'
                       gutterBottom
                       style={{ textAlign: 'center' }}
                     >

@@ -11,12 +11,13 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     maxWidth: '200px',
     height: '340px',
+    maxHeight: '340px',
     margin: '50px',
     fontSize: '1.1rem',
     boxShadow: 'none',
     overflow: 'visible',
+    backgroundColor: theme.palette.primary.main,
     transition: 'transform 0.2s, z-index 0s ease 0.2s',
-    backgroundColor: '#444',
     zIndex: 0,
     '&:hover': {
       zIndex: 1,
@@ -24,13 +25,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   media: {
-    flex: 1,
+    width: '100%',
+    height: '90%',
     maxWidth: '200px',
   },
   name: {
+    flex: 1,
     padding: '0.5rem !important',
-    color: '#ccc',
-    backgroundColor: '#222',
+    color: 'white',
+    backgroundColor: theme.palette.primary.main,
   },
   details: {
     position: 'absolute',
@@ -41,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     padding: '1em',
     boxSizing: 'border-box',
-
-    backgroundColor: '#444',
-    color: '#ccc',
+    overflow: 'hidden',
+    backgroundColor: theme.palette.secondary.dark,
+    color: 'white',
     transition: 'right 0.2s, width 0.2s, z-index 0.2s',
   },
   left: {
@@ -117,15 +120,16 @@ const Card = ({ movie }) => {
         </div>
         <div
           className={classes.details}
+          color='primary'
           style={
             hover
               ? {
                   right:
-                    hoverRef.current.getBoundingClientRect().x + 600 <=
+                    hoverRef.current.getBoundingClientRect().x + 670 <=
                     window.innerWidth
-                      ? '-200%'
+                      ? '-150%'
                       : '100%',
-                  width: '200%',
+                  width: '150%',
                   transition:
                     'right 0.2s ease 0.2s, width 0.2s ease 0.2s, z-index 0s',
                   zIndex: 1,
@@ -133,23 +137,43 @@ const Card = ({ movie }) => {
               : null
           }
         >
-          <Grid container>
-            <Typography variant="h6" component="h2" gutterBottom>
+          <Grid container style={{ height: '100%' }}>
+            <Typography
+              variant='h6'
+              component='h2'
+              gutterBottom
+              style={{ flex: '1 0 10%', lineHeight: '1.5rem' }}
+            >
               {movie.title}
             </Typography>
-            <Typography variant="body2" paragraph gutterBottom>
-              {trimText(movie.overview, 100)}
+            <Typography
+              variant='body2'
+              paragraph
+              gutterBottom
+              style={{
+                height: '60%',
+                overflow: 'hidden',
+                textAlign: 'justify',
+              }}
+            >
+              {trimText(movie.overview, 300)}
             </Typography>
-            <Grid item xs={1}>
-              <Grade />
-            </Grid>
-            <Grid item xs={2}>
-              <Typography variant="subtitle1" paragraph gutterBottom>
-                {movie.vote_average}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" component="h2" gutterBottom>
+            <Grid
+              item
+              xs={12}
+              style={{
+                height: '12%',
+                display: 'inline-flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'inline-flex' }}>
+                <Grade />
+                <Typography variant='subtitle1' paragraph gutterBottom>
+                  {movie.vote_average}
+                </Typography>
+              </div>
+              <Typography variant='subtitle1' component='h2' gutterBottom>
                 {movie.release_date}
               </Typography>
             </Grid>

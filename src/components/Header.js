@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
+  header: {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
+  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -158,29 +162,29 @@ const Header = () => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <Button color="inherit" onClick={() => getList(`popular`, 1)}>
+        <Button color='inherit' onClick={() => getList(`popular`, 1)}>
           Popular
         </Button>
       </MenuItem>
       <MenuItem>
-        <Button color="inherit" onClick={() => getList(`upcoming`, 1)}>
+        <Button color='inherit' onClick={() => getList(`upcoming`, 1)}>
           New
         </Button>
       </MenuItem>
       <MenuItem onClick={handleGenreMenuOpen}>
-        <Button color="inherit">Genre</Button>
+        <Button color='inherit'>Genre</Button>
       </MenuItem>
     </Menu>
   );
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
-        <Toolbar>
+      <AppBar position='static' className={classes.header}>
+        <Toolbar color={'#801336'}>
           <Typography
             onClick={() => getList('now_playing', 1)}
             className={classes.title}
-            variant="h6"
+            variant='h6'
             noWrap
           >
             MOVIES
@@ -190,7 +194,7 @@ const Header = () => {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder='Search…'
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -201,24 +205,24 @@ const Header = () => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <Button color="inherit" onClick={() => getList(`popular`, 1)}>
+            <Button color='inherit' onClick={() => getList(`popular`, 1)}>
               Popular
             </Button>
 
-            <Button color="inherit" onClick={() => getList(`upcoming`, 1)}>
+            <Button color='inherit' onClick={() => getList(`upcoming`, 1)}>
               New
             </Button>
-            <Button color="inherit" onClick={handleGenreMenuOpen}>
+            <Button color='inherit' onClick={handleGenreMenuOpen}>
               Genre
             </Button>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
-              aria-label="show more"
+              aria-label='show more'
               aria-controls={mobileMenuId}
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color='inherit'
             >
               <MoreIcon />
             </IconButton>

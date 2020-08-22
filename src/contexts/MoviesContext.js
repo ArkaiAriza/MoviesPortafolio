@@ -69,6 +69,12 @@ export const MoviesProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    const getList = async (selectedList, selectedPage) => {
+      const response = await axios.get(
+        `/3/movie/${selectedList}?api_key=${TMDB_KEY}&page=${selectedPage}`
+      );
+      setList(response.data.results);
+    };
     getList('now_playing', 1);
   }, []);
 

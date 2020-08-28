@@ -9,6 +9,7 @@ const MoviesContext = React.createContext({
   currentListGenre: 28,
   page: 1,
   lastSelected: 'init',
+  loading: false,
 });
 
 export const MoviesProvider = ({ children }) => {
@@ -17,6 +18,7 @@ export const MoviesProvider = ({ children }) => {
   const [currentListGenre, setCurrentListGenre] = useState(28);
   const [page, setPage] = useState(1);
   const [lastSelected, setLastSelected] = useState('init'); //init, type, genre, search
+  const [loading, setLoading] = useState(false);
 
   const changeList = (list) => {
     setList(list);
@@ -35,6 +37,7 @@ export const MoviesProvider = ({ children }) => {
   };
 
   const getList = async (selectedList, selectedPage) => {
+    setLoading(true);
     const response = await axios.get(
       `/3/movie/${selectedList}?api_key=${TMDB_KEY}&page=${selectedPage}`
     );
@@ -44,9 +47,11 @@ export const MoviesProvider = ({ children }) => {
     currentListType === 'now_playing'
       ? setLastSelected('init')
       : setLastSelected('type');
+    setLoading(false);
   };
 
   const searchMovie = async (term) => {
+    setLoading(true);
     if (term.length === 0) {
       getList('now_playing', 1);
       return;
@@ -56,9 +61,11 @@ export const MoviesProvider = ({ children }) => {
     );
     setList(response.data.results);
     setLastSelected('search');
+    setLoading(false);
   };
 
   const getGenreList = async (genre, selectedPage) => {
+    setLoading(true);
     const response = await axios.get(
       `/3/discover/movie?api_key=${TMDB_KEY}&sort_by=popularity.desc&with_genres=${genre}&page=${selectedPage}`
     );
@@ -66,14 +73,17 @@ export const MoviesProvider = ({ children }) => {
     setCurrentListGenre(genre);
     setPage(selectedPage);
     setLastSelected('genre');
+    setLoading(false);
   };
 
   useEffect(() => {
+    setLoading(true);
     const getList = async (selectedList, selectedPage) => {
       const response = await axios.get(
         `/3/movie/${selectedList}?api_key=${TMDB_KEY}&page=${selectedPage}`
       );
       setList(response.data.results);
+      setLoading(false);
     };
     getList('now_playing', 1);
   }, []);
@@ -93,6 +103,7 @@ export const MoviesProvider = ({ children }) => {
         getList,
         searchMovie,
         getGenreList,
+        loading,
       }}
     >
       {children}

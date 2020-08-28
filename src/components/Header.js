@@ -84,6 +84,24 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  menu: {
+    '& .MuiMenu-list': {
+      padding: 0,
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+    },
+  },
+  submenu: {
+    /* '& .MuiMenu-paper': {
+      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.primary.contrastText,
+    }, */
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    padding: '0.5rem 0',
+  },
 }));
 
 const Header = () => {
@@ -138,14 +156,22 @@ const Header = () => {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={
+        window.innerWidth < 960
+          ? { vertical: 'top', horizontal: 'left' }
+          : { vertical: 'bottom', horizontal: 'right' }
+      }
       id={menuId}
       keepMounted
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={(id) => handleMenuClose(-1)}
+      className={classes.menu}
+      getContentAnchorEl={null}
     >
-      <SubMenu options={genresList} onOptionClick={handleMenuClose} />
+      <div className={classes.submenu}>
+        <SubMenu options={genresList} onOptionClick={handleMenuClose} />
+      </div>
     </Menu>
   );
 
@@ -154,12 +180,14 @@ const Header = () => {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       id={mobileMenuId}
       keepMounted
+      getContentAnchorEl={null}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      className={classes.menu}
     >
       <MenuItem>
         <Button color='inherit' onClick={() => getList(`popular`, 1)}>

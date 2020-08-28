@@ -10,9 +10,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
     maxWidth: '200px',
-    height: '340px',
     maxHeight: '340px',
-    margin: '50px',
+    margin: '2rem',
     fontSize: '1.1rem',
     boxShadow: 'none',
     overflow: 'visible',
@@ -25,15 +24,18 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   media: {
+    flex: 1,
     width: '100%',
-    height: '90%',
+    maxHeight: '90%',
     maxWidth: '200px',
   },
   name: {
     flex: 1,
+    maxHeight: '7%',
     padding: '0.5rem !important',
     color: 'white',
     backgroundColor: theme.palette.primary.main,
+    overflow: 'hidden',
   },
   details: {
     position: 'absolute',
@@ -88,6 +90,34 @@ const Card = ({ movie }) => {
 
   if (!movie) return <div>Card</div>;
 
+  const style = () => {
+    if (hover) {
+      if (
+        hoverRef.current.getBoundingClientRect().x + 560 <=
+        window.innerWidth
+      ) {
+        return {
+          right: '-150%',
+          width: '150%',
+          transition: 'right 0.2s ease 0.2s, width 0.2s ease 0.2s, z-index 0s',
+          zIndex: 1,
+        };
+      } else if (hoverRef.current.getBoundingClientRect().x - 340 >= 0) {
+        return {
+          right: '100%',
+          width: '150%',
+          transition: 'right 0.2s ease 0.2s, width 0.2s ease 0.2s, z-index 0s',
+          zIndex: 1,
+        };
+      } else {
+        return {
+          transition: 'z-index 0s',
+          zIndex: 2,
+        };
+      }
+    }
+  };
+
   return (
     <>
       <MaterialCard
@@ -101,6 +131,8 @@ const Card = ({ movie }) => {
             : null
         }
         onClick={handleOpen}
+        onMouseOver={() => (window.innerWidth <= 635 ? setHover(true) : null)}
+        onMouseOut={() => (window.innerWidth <= 635 ? setHover(false) : null)}
       >
         <div
           className={classes.left}
@@ -118,25 +150,7 @@ const Card = ({ movie }) => {
           ></img>
           <div className={classes.name}>{trimText(movie.title, 15)}</div>
         </div>
-        <div
-          className={classes.details}
-          color='primary'
-          style={
-            hover
-              ? {
-                  right:
-                    hoverRef.current.getBoundingClientRect().x + 670 <=
-                    window.innerWidth
-                      ? '-150%'
-                      : '100%',
-                  width: '150%',
-                  transition:
-                    'right 0.2s ease 0.2s, width 0.2s ease 0.2s, z-index 0s',
-                  zIndex: 1,
-                }
-              : null
-          }
-        >
+        <div className={classes.details} color='primary' style={style()}>
           <Grid container style={{ height: '100%' }}>
             <Typography
               variant='h6'
@@ -156,7 +170,9 @@ const Card = ({ movie }) => {
                 textAlign: 'justify',
               }}
             >
-              {trimText(movie.overview, 300)}
+              {window.innerWidth <= 635
+                ? trimText(movie.overview, 200)
+                : trimText(movie.overview, 300)}
             </Typography>
             <Grid
               item

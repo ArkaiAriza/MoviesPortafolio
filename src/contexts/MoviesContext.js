@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import axios from '../apis/axios';
-import { TMDB_KEY } from '../keys';
+import TMDB_KEY from '../keys';
 
 const MoviesContext = React.createContext({
   list: [],

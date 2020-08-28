@@ -150,18 +150,18 @@ const Card = ({ movie }) => {
           ></img>
           <div className={classes.name}>{trimText(movie.title, 15)}</div>
         </div>
-        <div className={classes.details} color='primary' style={style()}>
+        <div className={classes.details} color="primary" style={style()}>
           <Grid container style={{ height: '100%' }}>
             <Typography
-              variant='h6'
-              component='h2'
+              variant="h6"
+              component="h2"
               gutterBottom
               style={{ flex: '1 0 10%', lineHeight: '1.5rem' }}
             >
               {movie.title}
             </Typography>
             <Typography
-              variant='body2'
+              variant="body2"
               paragraph
               gutterBottom
               style={{
@@ -185,11 +185,11 @@ const Card = ({ movie }) => {
             >
               <div style={{ display: 'inline-flex' }}>
                 <Grade />
-                <Typography variant='subtitle1' paragraph gutterBottom>
+                <Typography variant="subtitle1" paragraph gutterBottom>
                   {movie.vote_average}
                 </Typography>
               </div>
-              <Typography variant='subtitle1' component='h2' gutterBottom>
+              <Typography variant="subtitle1" component="h2" gutterBottom>
                 {movie.release_date}
               </Typography>
             </Grid>

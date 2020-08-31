@@ -42,6 +42,7 @@ const MoviesGrid = () => {
     getList,
     getGenreList,
     loading,
+    totalPages,
   } = useContext(MoviesContext);
 
   const handlePage = (event, value) => {
@@ -68,6 +69,8 @@ const MoviesGrid = () => {
     });
   };
 
+  console.log(list);
+
   return (
     <>
       <div className={classes.grid}>
@@ -77,16 +80,18 @@ const MoviesGrid = () => {
             style={{ alignSelf: 'center' }}
             size='10rem'
           />
-        ) : list !== null ? (
+        ) : list.length !== 0 ? (
           renderCards(list)
-        ) : null}
+        ) : (
+          <h1>No Results Found</h1>
+        )}
       </div>
       <div className={classes.root}>
         {lastSelected !== 'search' ? (
           <>
             <Pagination
               className={classes.pagLarge}
-              count={10}
+              count={totalPages}
               onChange={handlePage}
               page={page}
               color='secondary'
@@ -100,7 +105,7 @@ const MoviesGrid = () => {
               onChange={handlePage}
               page={page}
               color='secondary'
-              count={10}
+              count={totalPages}
               size='medium'
               siblingCount={0}
             />

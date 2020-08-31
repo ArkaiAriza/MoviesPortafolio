@@ -29,6 +29,18 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '90%',
     maxWidth: '200px',
   },
+  loader: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: '200px',
+    minHeight: '340px',
+    width: '100%',
+    maxHeight: '90%',
+    maxWidth: '200px',
+  },
+  hiddenMedia: { display: 'none' },
   name: {
     flex: 1,
     maxHeight: '7%',
@@ -59,6 +71,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     transition: 'z-index 0s ease 0.2s',
     zIndex: 0,
+    backgroundColor: theme.palette.primary.main,
+
     '&:hover': {
       zIndex: 2,
       transition: 'z-index 0s',
@@ -71,6 +85,7 @@ const Card = ({ movie }) => {
 
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
+  const [load, setLoad] = useState(false);
 
   const hoverRef = useRef();
 
@@ -140,28 +155,32 @@ const Card = ({ movie }) => {
           onMouseOut={() => setHover(false)}
         >
           <img
-            className={classes.media}
+            className={load ? classes.hiddenMedia : classes.media}
+            src={
+              'https://www.theprintworks.com/wp-content/themes/psBella/assets/img/film-poster-placeholder.png'
+            }
+            alt={movie.title}
+          ></img>
+          <img
+            className={load ? classes.media : classes.hiddenMedia}
             src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
             alt={movie.title}
-            onError={(ev) =>
-              (ev.target.src =
-                'https://www.theprintworks.com/wp-content/themes/psBella/assets/img/film-poster-placeholder.png')
-            }
+            onLoad={() => setLoad(true)}
           ></img>
           <div className={classes.name}>{trimText(movie.title, 15)}</div>
         </div>
-        <div className={classes.details} color="primary" style={style()}>
+        <div className={classes.details} color='primary' style={style()}>
           <Grid container style={{ height: '100%' }}>
             <Typography
-              variant="h6"
-              component="h2"
+              variant='h6'
+              component='h2'
               gutterBottom
               style={{ flex: '1 0 10%', lineHeight: '1.5rem' }}
             >
               {movie.title}
             </Typography>
             <Typography
-              variant="body2"
+              variant='body2'
               paragraph
               gutterBottom
               style={{
@@ -185,11 +204,11 @@ const Card = ({ movie }) => {
             >
               <div style={{ display: 'inline-flex' }}>
                 <Grade />
-                <Typography variant="subtitle1" paragraph gutterBottom>
+                <Typography variant='subtitle1' paragraph gutterBottom>
                   {movie.vote_average}
                 </Typography>
               </div>
-              <Typography variant="subtitle1" component="h2" gutterBottom>
+              <Typography variant='subtitle1' component='h2' gutterBottom>
                 {movie.release_date}
               </Typography>
             </Grid>

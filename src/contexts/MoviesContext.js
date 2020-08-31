@@ -19,6 +19,7 @@ export const MoviesProvider = ({ children }) => {
   const [page, setPage] = useState(1);
   const [lastSelected, setLastSelected] = useState('init'); //init, type, genre, search
   const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
 
   const changeList = (list) => {
     setList(list);
@@ -41,6 +42,7 @@ export const MoviesProvider = ({ children }) => {
     const response = await axios.get(
       `/3/movie/${selectedList}?api_key=${TMDB_KEY}&page=${selectedPage}`
     );
+    setTotalPages(response.data.total_pages);
     setList(response.data.results);
     setCurrentListType(selectedList);
     setPage(selectedPage);
@@ -69,6 +71,7 @@ export const MoviesProvider = ({ children }) => {
     const response = await axios.get(
       `/3/discover/movie?api_key=${TMDB_KEY}&sort_by=popularity.desc&with_genres=${genre}&page=${selectedPage}`
     );
+    setTotalPages(response.data.total_pages);
     setList(response.data.results);
     setCurrentListGenre(genre);
     setPage(selectedPage);
@@ -82,6 +85,7 @@ export const MoviesProvider = ({ children }) => {
       const response = await axios.get(
         `/3/movie/${selectedList}?api_key=${TMDB_KEY}&page=${selectedPage}`
       );
+      setTotalPages(response.data.total_pages);
       setList(response.data.results);
       setLoading(false);
     };
@@ -104,6 +108,7 @@ export const MoviesProvider = ({ children }) => {
         searchMovie,
         getGenreList,
         loading,
+        totalPages,
       }}
     >
       {children}

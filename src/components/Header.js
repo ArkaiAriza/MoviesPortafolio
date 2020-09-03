@@ -196,7 +196,7 @@ const Header = () => {
       </MenuItem>
       <MenuItem>
         <Button color="inherit" onClick={() => getList(`upcoming`, 1)}>
-          New
+          Upcoming
         </Button>
       </MenuItem>
       <MenuItem onClick={handleGenreMenuOpen}>
@@ -238,7 +238,7 @@ const Header = () => {
             </Button>
 
             <Button color="inherit" onClick={() => getList(`upcoming`, 1)}>
-              New
+              Upcoming
             </Button>
             <Button color="inherit" onClick={handleGenreMenuOpen}>
               Genre

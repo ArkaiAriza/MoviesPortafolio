@@ -10,6 +10,7 @@ const MoviesContext = React.createContext({
   page: 1,
   lastSelected: 'init',
   loading: false,
+  genreName: '',
 });
 
 export const MoviesProvider = ({ children }) => {
@@ -20,6 +21,7 @@ export const MoviesProvider = ({ children }) => {
   const [lastSelected, setLastSelected] = useState('init'); //init, type, genre, search
   const [loading, setLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
+  const [genreName, setGenreName] = useState('');
 
   const changeList = (list) => {
     setList(list);
@@ -79,6 +81,13 @@ export const MoviesProvider = ({ children }) => {
     setLoading(false);
   };
 
+  const getGenreById = async (genreId) => {
+    const response = await axios.get(`/3/genre/movie/list?api_key=${TMDB_KEY}`);
+    setGenreName(
+      response.data.genres.find((genre) => genre.id === genreId).name
+    );
+  };
+
   useEffect(() => {
     setLoading(true);
     const getList = async (selectedList, selectedPage) => {
@@ -101,12 +110,14 @@ export const MoviesProvider = ({ children }) => {
         page,
         lastSelected,
         changeList,
+        genreName,
         changeCurrentListType,
         changeCurrentListGenre,
         changePage,
         getList,
         searchMovie,
         getGenreList,
+        getGenreById,
         loading,
         totalPages,
       }}

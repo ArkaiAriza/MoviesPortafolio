@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Modal as UIModal, Typography, Grid, Link } from '@material-ui/core/';
@@ -8,6 +8,7 @@ import { Grade } from '@material-ui/icons';
 
 import axios from '../apis/axios';
 import TMDB_KEY from '../keys';
+import MoviesContext from '../contexts/MoviesContext';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -46,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
   image: {
     zIndex: 0,
     backgroundColor: theme.palette.primary.dark,
-    width: '100%',
+    maxWidth: '100%',
+    maxHeight: '500px',
   },
   gradient: {
     position: 'absolute',
@@ -91,6 +93,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.main,
   },
   hiddenMedia: { display: 'none' },
+  genreLink: {
+    cursor: 'pointer',
+    '&:hover': {
+      color: theme.palette.secondary.main,
+    },
+  },
 }));
 
 const Fade = React.forwardRef(function Fade(props, ref) {
@@ -133,6 +141,8 @@ export default function Modal({ open, handleClose, movie }) {
   const [movieDetails, setMovieDetails] = useState(null);
   const [load, setLoad] = useState(false);
 
+  const { getGenreList } = useContext(MoviesContext);
+
   const movieString = movieVideo
     ? `https://www.youtube.com/embed/${movieVideo}`
     : 'https://www.youtube.com/embed/1AasdTsg';
@@ -152,14 +162,23 @@ export default function Modal({ open, handleClose, movie }) {
 
   const genreRender = (movieDetail) => {
     return movieDetail.genres.map((genre) => {
-      return ' ' + genre.name;
+      return (
+        <Typography
+          onClick={() => getGenreList(genre.id, 1)}
+          variant="subtitle2"
+          key={genre.id}
+          className={classes.genreLink}
+        >
+          {genre.name + '\u00A0'}
+        </Typography>
+      );
     });
   };
 
   return (
     <UIModal
-      aria-labelledby='spring-modal-title'
-      aria-describedby='spring-modal-description'
+      aria-labelledby="spring-modal-title"
+      aria-describedby="spring-modal-description"
       className={classes.modal}
       open={open}
       onClose={handleClose}
@@ -176,23 +195,27 @@ export default function Modal({ open, handleClose, movie }) {
               {movieVideo && movieDetails ? (
                 <iframe
                   title={movieDetails.title}
-                  width='100%'
-                  height='100%'
+                  width="100%"
+                  height="100%"
                   src={movieString}
-                  frameBorder='0'
-                  allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
               ) : null}
             </div>
             <img
               className={load ? classes.hiddenMedia : classes.image}
-              src={`https://www.ilac.com/wp-content/uploads/2019/05/dark-placeholder.png`}
+              src={
+                !movie.poster_path
+                  ? `https://www.ilac.com/wp-content/uploads/2019/05/dark-placeholder.png`
+                  : `https://image.tmdb.org/t/p/original${movie.poster_path}`
+              }
               alt={movie.title}
             ></img>
             <img
               src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
-              alt='a'
+              alt="a"
               className={load ? classes.image : classes.hiddenMedia}
               onLoad={() => setLoad(true)}
             />
@@ -202,11 +225,11 @@ export default function Modal({ open, handleClose, movie }) {
             {movieDetails ? (
               <Grid container>
                 <Grid item xs={12} className={classes.gridRow}>
-                  <Typography variant='h4' component='h2'>
+                  <Typography variant="h4" component="h2">
                     {movieDetails.title}
                   </Typography>
                   <Typography
-                    variant='h6'
+                    variant="h6"
                     paragraph
                     style={{
                       display: 'inline-flex',
@@ -220,10 +243,10 @@ export default function Modal({ open, handleClose, movie }) {
                 </Grid>
 
                 <Grid item xs={12} className={classes.gridRow}>
-                  <Typography variant='subtitle2' component='h2' gutterBottom>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
                     {movieDetails.release_date}
                   </Typography>
-                  <Typography variant='subtitle2' component='h2' gutterBottom>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
                     {movieDetails.runtime !== 0
                       ? 'Runtime: ' + movieDetails.runtime + 'm'
                       : 'Runtime not informed!'}
@@ -233,8 +256,8 @@ export default function Modal({ open, handleClose, movie }) {
                 <Grid item xs={12}>
                   <hr className={classes.divider} />
                   <Typography
-                    variant='body1'
-                    component='h2'
+                    variant="body1"
+                    component="h2"
                     gutterBottom
                     style={{ textAlign: 'justify', padding: '1rem 15%' }}
                   >
@@ -244,12 +267,12 @@ export default function Modal({ open, handleClose, movie }) {
                 </Grid>
 
                 <Grid item xs={12} className={classes.gridRow}>
-                  <Typography variant='body1' component='h2' gutterBottom>
+                  <div style={{ display: 'flex' }}>
                     {genreRender(movieDetails)}
-                  </Typography>
+                  </div>
                   <Typography
-                    variant='subtitle2'
-                    component='h2'
+                    variant="subtitle2"
+                    component="h2"
                     gutterBottom
                     style={{ textAlign: 'right' }}
                   >
@@ -259,8 +282,8 @@ export default function Modal({ open, handleClose, movie }) {
 
                 <Grid item xs={12} className={classes.gridRow}>
                   <Typography
-                    variant='subtitle2'
-                    component='h2'
+                    variant="subtitle2"
+                    component="h2"
                     gutterBottom
                     style={{
                       overflow: 'hidden',
@@ -271,8 +294,8 @@ export default function Modal({ open, handleClose, movie }) {
                     {movieDetails.homepage ? (
                       <Link
                         className={classes.link}
-                        target='_blank'
-                        rel='noopener noreferrer'
+                        target="_blank"
+                        rel="noopener noreferrer"
                         href={movieDetails.homepage}
                       >
                         {movieDetails.homepage}
@@ -280,15 +303,15 @@ export default function Modal({ open, handleClose, movie }) {
                     ) : (
                       <Link
                         className={classes.link}
-                        target='_blank'
-                        rel='noopener noreferrer'
+                        target="_blank"
+                        rel="noopener noreferrer"
                         href={`https://www.imdb.com/title/${movieDetails.imdb_id}/?ref_=nv_sr_srsg_0`}
                       >
                         IMDB Information!
                       </Link>
                     )}
                   </Typography>
-                  <Typography variant='subtitle2' component='h2' gutterBottom>
+                  <Typography variant="subtitle2" component="h2" gutterBottom>
                     {'Status: ' + movieDetails.status}
                   </Typography>
                 </Grid>
@@ -296,8 +319,8 @@ export default function Modal({ open, handleClose, movie }) {
                 {movieDetails.tagline !== '' ? (
                   <Grid item xs={12}>
                     <Typography
-                      variant='h5'
-                      component='h2'
+                      variant="h5"
+                      component="h2"
                       gutterBottom
                       style={{ textAlign: 'center' }}
                     >

@@ -10,7 +10,7 @@ import { MoviesProvider } from '../contexts/MoviesContext';
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <div>
+      <div style={{ overflow: 'hidden' }}>
         <MoviesProvider>
           <Header />
           <MoviesGrid />
